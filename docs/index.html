@@ -60,27 +60,27 @@
 
       <section class="grid2">
         <div>
-          <h3>Final Plot 1 — Target Distribution</h3>
+          <h3>Target Distribution</h3>
           <div id="plotTarget" class="plot"></div>
         </div>
         <div>
-          <h3>Final Plot 5 — RMSE Comparison</h3>
+          <h3>RMSE Comparison</h3>
           <div id="plotRmse" class="plot"></div>
         </div>
       </section>
 
       <section>
-        <h3>Final Plot 2 — Simple Linear Regression: Actual vs Predicted</h3>
+        <h3>Simple Linear Regression: Actual vs Predicted</h3>
         <div id="plotSimple" class="plot"></div>
       </section>
 
       <section>
-        <h3>Final Plot 3 — Multiple Linear Regression: Actual vs Predicted</h3>
+        <h3>Multiple Linear Regression: Actual vs Predicted</h3>
         <div id="plotMulti" class="plot"></div>
       </section>
 
       <section>
-        <h3>Final Plot 6 — Residual Distributions</h3>
+        <h3>Residual Distributions</h3>
         <div id="plotResiduals" class="plot"></div>
       </section>
 
@@ -99,7 +99,7 @@
       </section>
 
       <section>
-        <h3>Final Plot 4 — Autoregression: Actual vs Predicted Over Time</h3>
+        <h3>Autoregression: Actual vs Predicted Over Time</h3>
         <div id="plotAr" class="plot"></div>
         <h4>Lag-order validation table</h4>
         <div id="lagTable" class="table-wrap"></div>
@@ -109,12 +109,12 @@
     <section id="crispdm" class="tab-content">
       <h2>CRISP-DM Procedure</h2>
       <ol>
-        <li><strong>Business Understanding:</strong> define objective, target, and success metrics (MAE, RMSE, $R^2$).</li>
-        <li><strong>Data Understanding:</strong> inspect schema, missing values, target distribution, and relationships.</li>
-        <li><strong>Data Preparation:</strong> handle invalid rows, engineer date features, avoid leakage, split train/test before selection.</li>
-        <li><strong>Modeling:</strong> simple linear baseline, multiple linear with one-hot + top-k selection, and autoregression on daily medians.</li>
-        <li><strong>Evaluation:</strong> compare held-out results; AR is evaluated chronologically on future periods.</li>
-        <li><strong>Deployment:</strong> monitor quality, drift, and retraining cadence in production.</li>
+        <li><strong>Business Understanding:</strong> define the prediction goal in the context of each dataset. For <em>House Price Prediction</em>, the objective is to estimate property sale price from structural and location attributes. For <em>Human-AI Interaction</em>, the objective is to estimate a behavioral outcome (for example, latent trust) from user profile, interface, and task conditions. Establish success criteria with held-out testing and comparable regression metrics (MAE, RMSE, and $R^2$).</li>
+        <li><strong>Data Understanding:</strong> examine dataset size, column types, missingness patterns, duplicate rows, target distribution shape, categorical cardinality, and numeric relationships. In the housing dataset, this includes checking date coverage, zero-price records, and correlations with <em>price</em>. In the Human-AI dataset, this includes mixed-scale numeric indicators, categorical factors (such as education level and domain), and potential sparsity or missing entries in interaction-related fields.</li>
+        <li><strong>Data Preparation:</strong> create analysis-ready features while preventing leakage. For housing data, remove invalid target rows (such as non-meaningful zero prices), derive calendar features from date, and exclude variables that directly encode the answer (for example, target-derived columns). For Human-AI data, impute missing values, encode categorical attributes, and preserve consistent train/test boundaries so feature selection and preprocessing decisions are learned from training data only.</li>
+        <li><strong>Modeling:</strong> train a sequence of interpretable baselines and stronger linear models. First, fit a simple linear regression using the strongest single numeric predictor identified on training data. Next, fit a multiple linear regression with one-hot encoded categorical variables and top-ranked features selected from the transformed design matrix. When a valid date column is available (especially relevant for housing transactions), add an autoregressive model on daily median target values to capture short-term temporal structure.</li>
+        <li><strong>Evaluation:</strong> compare models on untouched test data using the same error metrics where tasks are comparable. For property-level and Human-AI tabular regression, use a standard held-out split and inspect residual behavior, actual-vs-predicted alignment, and RMSE ranking. For autoregression, use chronological validation and future-only testing to avoid look-ahead bias, then interpret AR performance as a time-series forecast task rather than a direct replacement for row-level prediction models.</li>
+        <li><strong>Deployment:</strong> operationalize the workflow as a reproducible web experience and maintain model quality over time. In this site, users can switch between House Price, Human-AI, and custom datasets while reproducing the same CRISP-DM steps and interactive diagnostics. For production, add automated data checks, schema validation, model/version tracking, drift monitoring, periodic retraining, and clear documentation of assumptions and limitations for each dataset domain.</li>
       </ol>
     </section>
   </main>
