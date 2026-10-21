@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CRISP-DM Regression Explorer</title>
+  <link rel="stylesheet" href="./style.css" />
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/ml-matrix@6.11.0/matrix.umd.min.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Interactive CRISP-DM Regression Website</h1>
+    <p>GitHub Pages edition (static site) with dataset switching and interactive plots.</p>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="analysis">Analysis</button>
+    <button class="tab-btn" data-tab="crispdm">CRISP-DM Overview</button>
+  </nav>
+
+  <main>
+    <section id="analysis" class="tab-content active">
+      <div class="controls">
+        <label>Dataset
+          <select id="datasetSelect">
+            <option>House Price Prediction</option>
+            <option>Human-AI Interaction</option>
+            <option>Custom Dataset</option>
+          </select>
+        </label>
+
+        <label id="uploadWrap" class="hidden">Upload CSV
+          <input id="customFile" type="file" accept=".csv" />
+        </label>
+
+        <label>Target column
+          <select id="targetSelect"></select>
+        </label>
+
+        <label>Date column (optional)
+          <select id="dateSelect"></select>
+        </label>
+
+        <button id="runBtn">Run Analysis</button>
+      </div>
+
+      <div id="status" class="status"></div>
+
+      <section>
+        <h2>Dataset Preview</h2>
+        <div id="previewTable" class="table-wrap"></div>
+      </section>
+
+      <section>
+        <h2>Evaluation Metrics</h2>
+        <div id="metricsTable" class="table-wrap"></div>
+      </section>
+
+      <section class="grid2">
+        <div>
+          <h3>Final Plot 1 — Target Distribution</h3>
+          <div id="plotTarget" class="plot"></div>
+        </div>
+        <div>
+          <h3>Final Plot 5 — RMSE Comparison</h3>
+          <div id="plotRmse" class="plot"></div>
+        </div>
+      </section>
+
+      <section>
+        <h3>Final Plot 2 — Simple Linear Regression: Actual vs Predicted</h3>
+        <div id="plotSimple" class="plot"></div>
+      </section>
+
+      <section>
+        <h3>Final Plot 3 — Multiple Linear Regression: Actual vs Predicted</h3>
+        <div id="plotMulti" class="plot"></div>
+      </section>
+
+      <section>
+        <h3>Final Plot 6 — Residual Distributions</h3>
+        <div id="plotResiduals" class="plot"></div>
+      </section>
+
+      <section>
+        <h3>Feature Selection Outputs</h3>
+        <div class="grid2">
+          <div>
+            <h4>Top single-feature correlations</h4>
+            <div id="singleCorrTable" class="table-wrap"></div>
+          </div>
+          <div>
+            <h4>Selected encoded features</h4>
+            <div id="multiFeatTable" class="table-wrap"></div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h3>Final Plot 4 — Autoregression: Actual vs Predicted Over Time</h3>
+        <div id="plotAr" class="plot"></div>
+        <h4>Lag-order validation table</h4>
+        <div id="lagTable" class="table-wrap"></div>
+      </section>
+    </section>
+
+    <section id="crispdm" class="tab-content">
+      <h2>CRISP-DM Procedure</h2>
+      <ol>
+        <li><strong>Business Understanding:</strong> define objective, target, and success metrics (MAE, RMSE, $R^2$).</li>
+        <li><strong>Data Understanding:</strong> inspect schema, missing values, target distribution, and relationships.</li>
+        <li><strong>Data Preparation:</strong> handle invalid rows, engineer date features, avoid leakage, split train/test before selection.</li>
+        <li><strong>Modeling:</strong> simple linear baseline, multiple linear with one-hot + top-k selection, and autoregression on daily medians.</li>
+        <li><strong>Evaluation:</strong> compare held-out results; AR is evaluated chronologically on future periods.</li>
+        <li><strong>Deployment:</strong> monitor quality, drift, and retraining cadence in production.</li>
+      </ol>
+    </section>
+  </main>
+
+  <script src="./app.js"></script>
+</body>
+</html>
