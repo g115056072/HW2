@@ -8,6 +8,10 @@ const state = {
   currentDataset: "House Price Prediction",
 };
 
+function shouldAutoAnalyze() {
+  return state.currentDataset === "House Price Prediction" || state.currentDataset === "Human-AI Interaction";
+}
+
 const els = {
   datasetSelect: document.getElementById("datasetSelect"),
   targetSelect: document.getElementById("targetSelect"),
@@ -636,6 +640,15 @@ els.datasetSelect.addEventListener("change", async (e) => {
   state.currentDataset = e.target.value;
   els.uploadWrap.classList.toggle("hidden", state.currentDataset !== "Custom Dataset");
   await loadDataset(state.currentDataset);
+  if (shouldAutoAnalyze()) runAnalysis();
+});
+
+els.targetSelect.addEventListener("change", () => {
+  if (shouldAutoAnalyze()) runAnalysis();
+});
+
+els.dateSelect.addEventListener("change", () => {
+  if (shouldAutoAnalyze()) runAnalysis();
 });
 
 els.customFile.addEventListener("change", async (e) => {
@@ -650,4 +663,6 @@ els.customFile.addEventListener("change", async (e) => {
 els.runBtn.addEventListener("click", runAnalysis);
 
 wireTabs();
-loadDataset(state.currentDataset);
+loadDataset(state.currentDataset).then(() => {
+  if (shouldAutoAnalyze()) runAnalysis();
+});

@@ -109,12 +109,84 @@
     <section id="crispdm" class="tab-content">
       <h2>CRISP-DM Procedure</h2>
       <ol>
-        <li><strong>Business Understanding:</strong> define the prediction goal in the context of each dataset. For <em>House Price Prediction</em>, the objective is to estimate property sale price from structural and location attributes. For <em>Human-AI Interaction</em>, the objective is to estimate a behavioral outcome (for example, latent trust) from user profile, interface, and task conditions. Establish success criteria with held-out testing and comparable regression metrics (MAE, RMSE, and $R^2$).</li>
-        <li><strong>Data Understanding:</strong> examine dataset size, column types, missingness patterns, duplicate rows, target distribution shape, categorical cardinality, and numeric relationships. In the housing dataset, this includes checking date coverage, zero-price records, and correlations with <em>price</em>. In the Human-AI dataset, this includes mixed-scale numeric indicators, categorical factors (such as education level and domain), and potential sparsity or missing entries in interaction-related fields.</li>
-        <li><strong>Data Preparation:</strong> create analysis-ready features while preventing leakage. For housing data, remove invalid target rows (such as non-meaningful zero prices), derive calendar features from date, and exclude variables that directly encode the answer (for example, target-derived columns). For Human-AI data, impute missing values, encode categorical attributes, and preserve consistent train/test boundaries so feature selection and preprocessing decisions are learned from training data only.</li>
-        <li><strong>Modeling:</strong> train a sequence of interpretable baselines and stronger linear models. First, fit a simple linear regression using the strongest single numeric predictor identified on training data. Next, fit a multiple linear regression with one-hot encoded categorical variables and top-ranked features selected from the transformed design matrix. When a valid date column is available (especially relevant for housing transactions), add an autoregressive model on daily median target values to capture short-term temporal structure.</li>
-        <li><strong>Evaluation:</strong> compare models on untouched test data using the same error metrics where tasks are comparable. For property-level and Human-AI tabular regression, use a standard held-out split and inspect residual behavior, actual-vs-predicted alignment, and RMSE ranking. For autoregression, use chronological validation and future-only testing to avoid look-ahead bias, then interpret AR performance as a time-series forecast task rather than a direct replacement for row-level prediction models.</li>
-        <li><strong>Deployment:</strong> operationalize the workflow as a reproducible web experience and maintain model quality over time. In this site, users can switch between House Price, Human-AI, and custom datasets while reproducing the same CRISP-DM steps and interactive diagnostics. For production, add automated data checks, schema validation, model/version tracking, drift monitoring, periodic retraining, and clear documentation of assumptions and limitations for each dataset domain.</li>
+        <li>
+          <strong>Business Understanding:</strong>
+          <p>
+            Define the prediction goal in the context of each dataset.
+            For <em>House Price Prediction</em>, the objective is to estimate property sale price from structural and location attributes.
+            For <em>Human-AI Interaction</em>, the objective is to estimate a behavioral outcome (for example, latent trust)
+            from user profile, interface, and task conditions.
+          </p>
+          <p>
+            Establish success criteria with held-out testing and comparable regression metrics (MAE, RMSE, and $R^2$),
+            while noting that time-series forecasting answers a different operational question than row-level prediction.
+          </p>
+        </li>
+        <li>
+          <strong>Data Understanding:</strong>
+          <p>
+            Examine dataset size, column types, missingness patterns, duplicate rows, target-distribution shape,
+            categorical cardinality, and numeric relationships.
+            In the housing dataset, this includes date coverage, zero-price records, and correlations with <em>price</em>.
+          </p>
+          <p>
+            In the Human-AI dataset, this includes mixed-scale numeric indicators,
+            categorical factors (such as education level and domain), and possible sparsity in interaction-related fields.
+            These checks define what preprocessing and model constraints are required.
+          </p>
+        </li>
+        <li>
+          <strong>Data Preparation:</strong>
+          <p>
+            Create analysis-ready features while preventing leakage.
+            For housing data, remove invalid target rows (for example, non-meaningful zero prices), derive calendar features from date,
+            and exclude variables that directly encode the answer (for example, target-derived columns).
+          </p>
+          <p>
+            For Human-AI data, handle missing values, encode categorical attributes,
+            and preserve consistent train/test boundaries so feature selection and preprocessing decisions are learned from training data only.
+            This keeps evaluation unbiased and reproducible.
+          </p>
+        </li>
+        <li>
+          <strong>Modeling:</strong>
+          <p>
+            Train a sequence of interpretable baselines and stronger linear models.
+            First, fit a simple linear regression using the strongest single numeric predictor identified on training data.
+            Next, fit a multiple linear regression with one-hot encoded categorical variables and top-ranked transformed features.
+          </p>
+          <p>
+            When a valid date column is available (especially relevant for housing transactions),
+            add an autoregressive model on daily median target values to capture short-term temporal structure.
+            This complements tabular regression rather than replacing it.
+          </p>
+        </li>
+        <li>
+          <strong>Evaluation:</strong>
+          <p>
+            Compare models on untouched test data using the same error metrics where tasks are comparable.
+            For property-level and Human-AI tabular regression, inspect residual behavior,
+            actual-vs-predicted alignment, and RMSE ranking to assess fit quality and error stability.
+          </p>
+          <p>
+            For autoregression, use chronological validation and future-only testing to avoid look-ahead bias.
+            Interpret AR performance as a forecasting task with a different unit of analysis,
+            not as a direct replacement for row-level prediction models.
+          </p>
+        </li>
+        <li>
+          <strong>Deployment:</strong>
+          <p>
+            Operationalize the workflow as a reproducible web experience and maintain model quality over time.
+            In this site, users can switch between House Price, Human-AI, and custom datasets while reproducing
+            the same CRISP-DM steps and interactive diagnostics.
+          </p>
+          <p>
+            For production use, add automated data checks, schema validation, model/version tracking,
+            drift monitoring, periodic retraining, and clear documentation of assumptions and limitations
+            for each dataset domain.
+          </p>
+        </li>
       </ol>
     </section>
   </main>
